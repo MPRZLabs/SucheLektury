@@ -1,12 +1,26 @@
 #!/usr/bin/env python3
-from flask import Flask, request, url_for, redirect
-import pymarkovchain
+from flask import Flask, request, url_for, redirect, g
+import pymarkovchain, sqlite3
 
 app = Flask(__name__)
-
+DATABASE = "stuff.sqlite"
 mc = pymarkovchain.MarkovChain('./lekturov')
 
 history = []
+for row in sqlite3.connect(DATABASE).cursor().execute("SELECT stuffie FROM stuff"):
+  history.append(row[0])
+
+def get_db():
+  db = getattr(g, '_database', None)
+  if db is None:
+    db = g._database = sqlite3.connect(DATABASE)
+  return db
+
+@app.teardown_appcontext
+def close_connection(exception):
+  db = getattr(g, '_database', None)
+  if db is not None:
+    db.close()
 
 @app.route('/favicon.ico')
 def favicon():
@@ -15,9 +29,11 @@ def favicon():
 def getrandom():
   ret = ""
   while len(ret) < 10:
-    ret = mc.generateString()
-  history.append(ret)
-  return "%s." % ret
+    ret = "%s." % mc.generateString()
+  history.append(str(ret))
+  get_db().cursor().execute("INSERT INTO stuff (stuffie) VALUES (?)", (str(ret),))
+  get_db().commit()
+  return ret
 
 @app.route('/')
 def randomhtml():

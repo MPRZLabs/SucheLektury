@@ -45,7 +45,13 @@ def randomtxt():
 
 @app.route('/history')
 def historyhtml():
-  return """<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="UTF-8"><title>Suche Lektury</title></head><body><h1>Suche Lektury</h1><h2>Historia</h2><blockquote><em>%s</em></blockquote></body></html>""" % "<br />".join(history)
+  getrandom()
+  return """<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="UTF-8"><title>Suche Lektury</title></head><body><h1>Suche Lektury</h1><h2>Historia</h2><blockquote><em>%s</em></blockquote></body></html>""" % " ".join(history)
+
+@app.route('/history/txt')
+def historytxt():
+  getrandom()
+  return " ".join(history)
 
 if __name__ == '__main__':
   app.run(host='0.0.0.0', port=8082)

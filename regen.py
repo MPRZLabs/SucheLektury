@@ -3,7 +3,7 @@ import os, pymarkovchain
 import logging as l
 l.basicConfig(level=l.INFO)
 l.info("Opening database file")
-mc = pymarkovchain.MarkovChain('./lekturov')
+mc = pymarkovchain.MarkovChain('./lekturov.dat')
 tekst = ""
 l.info("Looking for .txt files")
 for f in os.listdir():

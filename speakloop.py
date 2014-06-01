@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import pymarkovchain, subprocess
-mc = pymarkovchain.MarkovChain('./lekturov')
+mc = pymarkovchain.MarkovChain('./lekturov.dat')
 while True:
   ret = "%s." % mc.generateString()
   print(ret)

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="http://netdna.bootstrapcdn.com/bootswatch/3.1.1/journal/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Suche Lektury</title>
+  </head>
+  <body>
+    <div class="container"><div class="jumbotron">
+        <h1>Suche Lektury</h1>
+        <h2>Historia</h2>
+        <blockquote>
+          <em>{{text}}</em>
+        </blockquote>
+        <button type="button" class="btn btn-success btn-block" id="add" href="#add" onClick="addMore()">Dodaj</a>
+    </div></div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script>
+      function addMore() {
+        $.get("{{linkjson}}",{},addToDat,"json");
+        $("button").attr("disabled","disabled");
+        $("em").html($("em").text());
+      }
+      function addToDat(data) {
+        $("button").removeAttr("disabled");
+        var bq = $("em");
+        bq.html(bq.text()+" ");
+        $("<u>" + data.text + "</u>").attr("onClick","addMore()").attr("alt","Kliknij, aby dodać").appendTo(bq);
+        $("html, body").animate({
+          scrollTop: $("#add").offset().top
+        }, 1000);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link href="http://netdna.bootstrapcdn.com/bootswatch/3.1.1/journal/bootstrap.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <title>Suche Lektury</title>
+  </head>
+  <body>
+    <div class="container"><div class="jumbotron">
+        <h1>Suche lektury</h1>
+        <blockquote>{{text}}</blockquote>
+        <div class="btn-group">
+          <a role="button" type="button" class="btn btn-info" href="{{linkclear}}">Generuj</a>
+          <a role="button" type="button" class="btn btn-danger" href="{{linkhistory}}">Historia</a>
+          <button type="button" class="btn btn-success" href="#add" id="add" onClick="addMore()">Dodaj</button>
+        </div>
+    </div></div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script>
+      function addMore() {
+        $.get("{{linkjson}}",{},addToDat,"json");
+        $("button").attr("disabled","disabled");
+        $("blockquote").text(bq.text());
+      }
+      function addToDat(data) {
+        $("button").removeAttr("disabled");
+        var bq = $("blockquote");
+        bq.html(bq.text()+" ");
+        $("<u>" + data.text + "</u>").attr("onClick","addMore()").attr("alt","Kliknij, aby dodać").appendTo(bq);
+        $("html, body").animate({
+          scrollTop: $("#add").offset().top
+        }, 5000);
+      }
+    </script>
+  </body>
+</html>

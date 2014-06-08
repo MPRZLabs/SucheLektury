@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-from flask import Flask, request, url_for, redirect, g
-import pymarkovchain, sqlite3, logging
+from flask import Flask, request, url_for, redirect, g, render_template
+import pymarkovchain, sqlite3, logging, json
 
 app = Flask(__name__)
 DATABASE = "stuff.sqlite"
@@ -44,16 +44,20 @@ def getrandom():
 
 @app.route('/')
 def randomhtml():
-  return """<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="UTF-8"><title>Suche Lektury</title></head><body><h1>Suche lektury</h1><blockquote>%s</blockquote><a href="%s">Generuj</a></body></html>""" % (getrandom(), url_for("randomhtml"))
+  return render_template("home.html", text=getrandom(), linkclear=url_for("randomhtml"), linkhistory=url_for("historyhtml"), linkjson=url_for("randomjson"))
 
 @app.route('/txt')
 def randomtxt():
   return getrandom()
 
+@app.route('/json')
+def randomjson():
+  return json.dumps({"text":getrandom()})
+
 @app.route('/history')
 def historyhtml():
   getrandom()
-  return """<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1"><meta charset="UTF-8"><title>Suche Lektury</title></head><body><h1>Suche Lektury</h1><h2>Historia</h2><blockquote><em>%s</em></blockquote></body></html>""" % " ".join(history)
+  return render_template("history.html", text=" ".join(history), linkjson=url_for("randomjson"))
 
 @app.route('/history/txt')
 def historytxt():
@@ -61,4 +65,4 @@ def historytxt():
   return " ".join(history)
 
 if __name__ == '__main__':
-  app.run(host='0.0.0.0', port=8082)
+  app.run(host='0.0.0.0', port=8084)
